@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>4.0.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>takee.dev</groupId>
 	<artifactId>performance</artifactId>
@@ -34,7 +34,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -79,6 +78,26 @@
 					</excludes>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <java>
+                        <googleJavaFormat/>
+                        <removeUnusedImports/>
+                        <importOrder/>
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 
