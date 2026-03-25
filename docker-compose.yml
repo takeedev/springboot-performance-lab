@@ -1,0 +1,27 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./env/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prom_data:/prometheus
+    networks:
+      - monitor
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./env/grafana:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_USER=root
+      - GF_SECURITY_ADMIN_PASSWORD=root
+    networks:
+      - monitor
+volumes:
+  prom_data:
+
+networks:
+  monitor:
+    driver: bridge
