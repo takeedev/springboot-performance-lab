@@ -1,0 +1,21 @@
+services:
+  influxdb:
+    image: influxdb:1.8
+    environment:
+      - INFLUXDB_DB=k6
+    ports:
+      - "8086:8086"
+    networks:
+      - monitor
+
+  k6:
+    image: grafana/k6
+    volumes:
+      - ./k6:/scripts
+    networks:
+      - monitor
+    entrypoint: ["sleep", "infinity"]
+
+networks:
+  monitor:
+    driver: bridge

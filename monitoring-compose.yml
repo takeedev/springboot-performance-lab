@@ -13,7 +13,9 @@ services:
       - "3000:3000"
     restart: unless-stopped
     volumes:
-      - ./env/grafana:/etc/grafana/provisioning/datasources
+      - ./env/grafana:/var/lib/grafana/dashboards
+      - ./env/grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./env/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
     environment:
       - GF_SECURITY_ADMIN_USER=root
       - GF_SECURITY_ADMIN_PASSWORD=root
