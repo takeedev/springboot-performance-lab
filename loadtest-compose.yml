@@ -1,6 +1,6 @@
 services:
   influxdb:
-    image: influxdb:1.8
+    image: influxdb:1.11
     environment:
       - INFLUXDB_DB=k6
     ports:
