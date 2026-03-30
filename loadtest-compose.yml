@@ -7,6 +7,8 @@ services:
       - "8086:8086"
     networks:
       - monitor
+    volumes:
+      - influxdb-storage:/var/lib/influxdb
 
   k6:
     image: grafana/k6
@@ -15,6 +17,9 @@ services:
     networks:
       - monitor
     entrypoint: ["sleep", "infinity"]
+
+volumes:
+  influxdb-storage:
 
 networks:
   monitor:
