@@ -22,3 +22,11 @@ docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-pr
 
 ## Dashboard
 [Dashboard K6 Grafana](https://grafana.com/grafana/dashboards/19665-k6-prometheus/)
+
+
+## JFR (Java Flight Recorder)
+#### run scrip load test
+```shell
+jfr summary recording.jfr
+```
+
