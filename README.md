@@ -25,8 +25,10 @@ docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-pr
 
 
 ## JFR (Java Flight Recorder)
-#### run scrip load test
 ```shell
 jfr summary recording.jfr
 ```
 
+
+## JMC (Java Mission Control)
+#### open jfr file
