@@ -1,25 +1,17 @@
 services:
-  influxdb:
-    image: influxdb:1.11
-    environment:
-      - INFLUXDB_DB=k6
-    ports:
-      - "8086:8086"
-    networks:
-      - monitor
-    volumes:
-      - influxdb-storage:/var/lib/influxdb
-
   k6:
     image: grafana/k6
     volumes:
       - ./k6:/scripts
+    ports:
+      - "6565:6565"
     networks:
       - monitor
+    environment:
+      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
     entrypoint: ["sleep", "infinity"]
-
-volumes:
-  influxdb-storage:
+    depends_on:
+      - prometheus
 
 networks:
   monitor:

@@ -16,5 +16,5 @@ docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml down
 
 #### run scrip load test 
 ```shell
-docker exec -it pref-k6-1 k6 run --out influxdb=http://pref-influxdb-1:8086/k6 /scripts/loadTestK6.js
+docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-prometheus-1:9090/api/v1/write /scripts/loadTestK6.js
 ```
