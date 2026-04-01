@@ -28,6 +28,8 @@ docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-pr
 ```shell
 jfr summary recording.jfr
 ```
+command JCMD
+command jconsole
 
 
 ## JMC (Java Mission Control)
