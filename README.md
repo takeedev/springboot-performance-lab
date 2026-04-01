@@ -18,3 +18,7 @@ docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml down
 ```shell
 docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-prometheus-1:9090/api/v1/write /scripts/loadTestK6.js
 ```
+
+
+## Dashboard
+[Dashboard K6 Grafana](https://grafana.com/grafana/dashboards/19665-k6-prometheus/)
