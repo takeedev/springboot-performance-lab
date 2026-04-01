@@ -9,6 +9,7 @@ services:
       - monitor
     environment:
       - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
+      - K6_PROMETHEUS_RW_TREND_STATS=p(95),p(99),min,max
     entrypoint: ["sleep", "infinity"]
     depends_on:
       - prometheus
