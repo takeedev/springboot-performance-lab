@@ -1,23 +1,37 @@
 # springboot-performance-lab
-performance lab
-
 
 ## command 
 
-#### create container 
+#### 1. Create container 
 ```shell
 docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml up -d
 ```
 
-#### down container 
+#### 2. Down container 
 ```shell
 docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml down
 ```
 
-#### run scrip load test 
+#### 3. Run scrip load test 
 ```shell
 docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-prometheus-1:9090/api/v1/write /scripts/loadTestK6.js
 ```
+           ┌────────────┐
+           │    k6      │
+           │ Load Test  │
+           └─────┬──────┘
+                 │ metrics (remote write)
+                 ▼
+        ┌──────────────────┐
+        │   Prometheus     │
+        │ Metrics Storage  │
+        └────────┬─────────┘
+                 │ query
+                 ▼
+           ┌────────────┐
+           │  Grafana   │
+           │ Dashboard  │
+           └────────────┘
 
 ## prometheus
 ```text
