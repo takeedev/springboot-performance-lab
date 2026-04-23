@@ -19,6 +19,10 @@ docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml down
 docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-prometheus-1:9090/api/v1/write /scripts/loadTestK6.js
 ```
 
+## grafana
+```text
+localhost:3000
+```
 
 ## Dashboard
 [Dashboard spring boot](https://grafana.com/grafana/dashboards/17053-spring-boot-statistics-endpoint-metrics/)
