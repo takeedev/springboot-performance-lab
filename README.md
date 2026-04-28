@@ -16,6 +16,11 @@ docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml down
 ```shell
 docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-prometheus-1:9090/api/v1/write /scripts/loadTestK6.js
 ```
+
+#### 4. H2 database
+```shell
+http://localhost:8080/h2-console
+```
            ┌────────────┐
            │    k6      │
            │ Load Test  │
