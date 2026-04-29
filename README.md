@@ -21,22 +21,20 @@ docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-pr
 ```shell
 http://localhost:8080/h2-console
 ```
-           ┌────────────┐
-           │    k6      │
-           │ Load Test  │
-           └─────┬──────┘
-                 │ metrics (remote write)
-                 ▼
-        ┌──────────────────┐
-        │   Prometheus     │
-        │ Metrics Storage  │
-        └────────┬─────────┘
-                 │ query
-                 ▼
-           ┌────────────┐
-           │  Grafana   │
-           │ Dashboard  │
-           └────────────┘
+
+## Flowchart application
+```mermaid
+flowchart TD
+    A[Spring Boot Application] -->|HTTP Request| B[Grafana K6]
+    B -->|Metrics| C[Prometheus]
+    C --> D[Grafana]
+
+    A -->|Metrics| C
+    A -->|Logs| E[Grafana Loki]
+    E --> D
+
+    A -->|JFR Recording| F[JFR File]
+```
 
 ## prometheus
 ```text
