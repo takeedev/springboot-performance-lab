@@ -1,6 +1,7 @@
 services:
   k6:
     image: grafana/k6
+    container_name: pref_k6
     volumes:
       - ./k6:/scripts
     ports:
