@@ -4,12 +4,12 @@
 
 #### 1. Create container 
 ```shell
-docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml up -d
+docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml -f postgress-compose.yml up -d
 ```
 
 #### 2. Down container 
 ```shell
-docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml down
+docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml -f postgress-compose.yml down
 ```
 
 #### 3. Run scrip load test 

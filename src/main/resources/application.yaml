@@ -3,11 +3,14 @@ server:
 spring:
   application:
     name: performance-app
+  datasource:
+    url: jdbc:postgresql://localhost:5432/perfdb
+    username: perfuser
+    password: perfpass
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: none
+    show-sql: false
 management:
   endpoints:
     web:

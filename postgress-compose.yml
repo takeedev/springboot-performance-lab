@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: perf-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: perfdb
+      POSTGRES_USER: perfuser
+      POSTGRES_PASSWORD: perfpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+
+networks:
+  monitor:
+    driver: bridge
