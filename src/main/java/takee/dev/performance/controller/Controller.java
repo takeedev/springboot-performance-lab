@@ -12,14 +12,17 @@ public class Controller {
 
   @GetMapping("/slow")
   public String slow() {
-    for (int i = 0; i < 1000; i++) {
-    Thread.startVirtualThread(
-          () -> {
-            while (true) {
-              sqrt(Math.random());
-            }
-          });
-    }
+      int cores = Runtime.getRuntime().availableProcessors();
+      for (int i = 0; i < cores; i++) {
+          new Thread(() -> {
+              long x = 0;
+              while (true) {
+                  x += 1;
+                  x *= 2;
+                  x %= 1000000;
+              }
+          }).start();
+      }
     return "ok";
   }
 }
