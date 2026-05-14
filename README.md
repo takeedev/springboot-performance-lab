@@ -14,7 +14,7 @@ docker-compose -p pref -f loadtest-compose.yml -f monitoring-compose.yml -f post
 
 #### 3. Run scrip load test 
 ```shell
-docker exec -it pref-k6-1 k6 run --out experimental-prometheus-rw=http://pref-prometheus-1:9090/api/v1/write /scripts/loadTestK6.js
+docker exec -it pref_k6 k6 run --out experimental-prometheus-rw=http://prometheus:9090/api/v1/write /scripts/loadTestK6.js
 ```
 
 ## Flowchart application
