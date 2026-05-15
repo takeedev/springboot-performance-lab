@@ -6,7 +6,9 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -23,28 +26,20 @@ public class Controller {
 
     private final TransactionRepository transactionRepository;
 
-  @GetMapping("/slow")
-  public String slow() {
-//      int cores = Runtime.getRuntime().availableProcessors();
-//      for (int i = 0; i < cores; i++) {
-//          new Thread(() -> {
-//              long x = 0;
-//              while (true) {
-//                  x += 1;
-//                  x *= 2;
-//                  x %= 1000000;
-//              }
-//          }).start();
-//      }
-      var a = transactionRepository.findAll();
-      a.forEach(e-> System.out.println(e));
-    return "ok";
-  }
+    @GetMapping("/slow")
+    public String slow() throws InterruptedException {
+        for (int j = 0; j < 20 ; j++) {
+            transactionRepository.findAll(Pageable.ofSize(10));
+            Thread.sleep(1000);
+            log.info("count {}", j);
+        }
+        return "ok";
+    }
 }
 
 @Repository
 interface TransactionRepository extends JpaRepository<Transaction, Long> {
-  List<Transaction> findAll();
+    List<Transaction> findAll();
 }
 
 @Getter
