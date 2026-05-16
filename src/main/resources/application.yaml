@@ -1,5 +1,8 @@
 server:
   port: 8080
+  threads:
+    virtual:
+      enabled: true
 spring:
   application:
     name: performance-app
