@@ -62,7 +62,7 @@ public class Controller {
                 .toList();
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         long end = System.currentTimeMillis();
-        log.info("<<< END request totalTime=" + (end - start) + " ms");
+        log.info("<<< END request totalTime={} ms", end - start);
         return "ok";
     }
 }

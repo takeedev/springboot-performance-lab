@@ -58,7 +58,6 @@ localhost:3000
 
 ```shell
 jfr summary recording.jfr
-
 ```
 command JCMD
 command jconsole
