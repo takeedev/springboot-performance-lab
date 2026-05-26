@@ -49,6 +49,7 @@ localhost:3000
 [Document K6 Prometheus](https://grafana.com/docs/k6/latest/results-output/real-time/prometheus-remote-write/)
 
 ## JFR (Java Flight Recorder)
+### Start JFR Recording
 ```text
 -XX:StartFlightRecording=duration=60s,filename=PerformanceRecording.jfr
 -XX:StartFlightRecording=filename=PerformanceRecording.jfr
@@ -56,15 +57,15 @@ localhost:3000
 -XX:StartFlightRecording=filename=PerformanceRecording.jfr,maxage=1h
 ```
 
-```shell
+## JFR Command Line Tools
+### Show JFR summary
+```bash
 jfr summary recording.jfr
 ```
-command JCMD
-command jconsole
-
 
 ## JMC (Java Mission Control)
-download
-
-[Link Download JMC](https://www.oracle.com/java/technologies/javase/products-jmc8-downloads.html)
-#### open jfr file
+Use [JMC](https://www.oracle.com/java/technologies/javase/products-jmc8-downloads.html) to:
+- Open and analyze `.jfr` files
+- Record JFR in realtime
+- Monitor JVM performance
+- Analyze CPU, Memory, GC, Threads, and IO usage
