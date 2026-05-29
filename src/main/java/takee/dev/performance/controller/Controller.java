@@ -10,6 +10,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,9 +36,26 @@ public class Controller {
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
     @GetMapping("/slow")
-    public String slow() {
+    public String slow() throws InterruptedException {
         long start = System.currentTimeMillis();
         log.info(">>> START request");
+        int task = 1;
+        Thread thread1 = Thread.startVirtualThread(() -> {
+            log.info(">>> START thread1 {}", task);
+            transactionRepository.findAll(PageRequest.of(0, 10000, Sort.by(Sort.Order.desc("id"))));
+        });
+        Thread thread2 = Thread.startVirtualThread(() -> {
+            log.info(">>> START thread2 {}", task);
+            transactionRepository.findAll(PageRequest.of(0, 10000, Sort.by(Sort.Order.desc("id"))));
+        });
+        thread1.join();
+        thread2.join();
+        long end = System.currentTimeMillis();
+        log.info("<<< END request totalTime={} ms", end - start);
+        return "ok";
+    }
+
+    private void completAbleFuture() {
         List<CompletableFuture<Void>> futures = IntStream.range(0, 50)
                 .mapToObj(i ->
                         CompletableFuture.runAsync(() -> {
@@ -61,9 +80,6 @@ public class Controller {
                 )
                 .toList();
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        long end = System.currentTimeMillis();
-        log.info("<<< END request totalTime={} ms", end - start);
-        return "ok";
     }
 }
 
