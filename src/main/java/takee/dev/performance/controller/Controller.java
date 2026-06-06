@@ -59,7 +59,7 @@ public class Controller {
     return "ok";
   }
 
-  private void completAbleFuture() {
+  private void completableFuture() {
     List<CompletableFuture<Void>> futures =
         IntStream.range(0, 50)
             .mapToObj(
