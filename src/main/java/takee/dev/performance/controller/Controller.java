@@ -3,21 +3,6 @@ package takee.dev.performance.controller;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,6 +10,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -32,61 +30,72 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class Controller {
 
-    private final TransactionRepository transactionRepository;
-    private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+  private final TransactionRepository transactionRepository;
+  private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
-    @GetMapping("/slow")
-    public String slow() throws InterruptedException {
-        long start = System.currentTimeMillis();
-        log.info(">>> START request");
-        int task = 1;
-        Thread thread1 = Thread.startVirtualThread(() -> {
-            log.info(">>> START thread1 {}", task);
-            transactionRepository.findAll(PageRequest.of(0, 10000, Sort.by(Sort.Order.desc("id"))));
-        });
-        Thread thread2 = Thread.startVirtualThread(() -> {
-            log.info(">>> START thread2 {}", task);
-            transactionRepository.findAll(PageRequest.of(0, 10000, Sort.by(Sort.Order.desc("id"))));
-        });
-        thread1.join();
-        thread2.join();
-        long end = System.currentTimeMillis();
-        log.info("<<< END request totalTime={} ms", end - start);
-        return "ok";
-    }
+  @GetMapping("/slow")
+  public String slow() throws InterruptedException {
+    long start = System.currentTimeMillis();
+    log.info(">>> START request");
+    int task = 1;
+    Thread thread1 =
+        Thread.startVirtualThread(
+            () -> {
+              log.info(">>> START thread1 {}", task);
+              transactionRepository.findAll(
+                  PageRequest.of(0, 10000, Sort.by(Sort.Order.desc("id"))));
+            });
+    Thread thread2 =
+        Thread.startVirtualThread(
+            () -> {
+              log.info(">>> START thread2 {}", task);
+              transactionRepository.findAll(
+                  PageRequest.of(0, 10000, Sort.by(Sort.Order.desc("id"))));
+            });
+    thread1.join();
+    thread2.join();
+    long end = System.currentTimeMillis();
+    log.info("<<< END request totalTime={} ms", end - start);
+    return "ok";
+  }
 
-    private void completAbleFuture() {
-        List<CompletableFuture<Void>> futures = IntStream.range(0, 50)
-                .mapToObj(i ->
-                        CompletableFuture.runAsync(() -> {
-                                    long taskStart = System.currentTimeMillis();
-                                    log.info("Task " + i + " START");
-                                    try {
-                                        var result = transactionRepository.findAll(PageRequest.of(0, 10));
-                                        log.info("Task " + i + " SUCCESS size=" + result.getSize());
-                                    } catch (Exception e) {
-                                        log.info("Task " + i + " ERROR: " + e.getMessage());
-                                        throw e;
-                                    } finally {
-                                        long taskEnd = System.currentTimeMillis();
-                                        log.info("Task " + i + " END time=" + (taskEnd - taskStart) + " ms");
-                                    }
-                                }, executorService)
-                                .orTimeout(2, TimeUnit.SECONDS)
-                                .exceptionally(ex -> {
-                                    log.info("Task " + i + " TIMEOUT/FAIL: " + ex.getMessage());
-                                    return null;
-                                })
-                )
-                .toList();
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-    }
+  private void completAbleFuture() {
+    List<CompletableFuture<Void>> futures =
+        IntStream.range(0, 50)
+            .mapToObj(
+                i ->
+                    CompletableFuture.runAsync(
+                            () -> {
+                              long taskStart = System.currentTimeMillis();
+                              log.info("Task " + i + " START");
+                              try {
+                                var result = transactionRepository.findAll(PageRequest.of(0, 10));
+                                log.info("Task " + i + " SUCCESS size=" + result.getSize());
+                              } catch (Exception e) {
+                                log.info("Task " + i + " ERROR: " + e.getMessage());
+                                throw e;
+                              } finally {
+                                long taskEnd = System.currentTimeMillis();
+                                log.info(
+                                    "Task " + i + " END time=" + (taskEnd - taskStart) + " ms");
+                              }
+                            },
+                            executorService)
+                        .orTimeout(2, TimeUnit.SECONDS)
+                        .exceptionally(
+                            ex -> {
+                              log.info("Task " + i + " TIMEOUT/FAIL: " + ex.getMessage());
+                              return null;
+                            }))
+            .toList();
+    CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+  }
 }
 
 @Repository
 interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    @NonNull
-    List<Transaction> findAll();
+  @NonNull
+  List<Transaction> findAll();
 }
 
 @Getter
@@ -95,11 +104,9 @@ interface TransactionRepository extends JpaRepository<Transaction, Long> {
 @Table(name = "transactions")
 class Transaction {
 
-    @Id
-    private Long id;
-    private int userId;
-    private double amount;
-    private String status;
-    private Date createdAt;
-
+  @Id private Long id;
+  private int userId;
+  private double amount;
+  private String status;
+  private Date createdAt;
 }
